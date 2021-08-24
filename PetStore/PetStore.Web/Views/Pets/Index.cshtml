@@ -1,0 +1,45 @@
+﻿
+<div id="pets">
+    <table id="tblPets" class="table table-striped">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>About</td>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        GetAllPets();
+    });
+
+    function GetAllPets() {
+        Ajax('/api/petsapi/GetAllPets', "GET", null, GetAllPetsSuccessCallback)
+    }
+    function GetAllPetsSuccessCallback(response) {
+        $('#tblPets tbody').empty();
+        let html = '';
+        $(response).each(function (index, element) {
+            html += '<tr><td>' + element.name + '</td><td>' + element.about + '</td></tr>';
+        });
+        $('#tblPets tbody').append(html);
+    }
+
+    function Ajax(APIURL, RequestType, ParametersData, SuccessCallback) {
+        $.ajax({
+            type: RequestType,
+            url: APIURL,
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(ParametersData),
+            async: true,
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(textStatus);
+            },
+            success: SuccessCallback,
+        });
+    }
+</script>
